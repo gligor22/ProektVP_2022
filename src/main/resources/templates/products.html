@@ -1,0 +1,65 @@
+
+<div class="container m-3"  style="margin-bottom: 50px">
+    <form class="form-inline justify-content-center"  th:method="GET" th:action="@{'/products'}">
+        <div class="form-group mb-2">
+            <label class="form-control">Manufacturer</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select name="manufacturer" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="c : ${manufactures}" th:text="${c.getName()}" th:value="${c.getId()}"></option>
+            </select>
+        </div>
+        <div class="form-group mb-2">
+            <label class="form-control">Category</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select id="f2"  name="category" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="c : ${categories}" th:text="${c.getName()}" th:value="${c.getId()}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter Products</button>
+    </form>
+    <div class="border-top m-3"></div>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Product Price</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Category</th>
+                <th scope="col" colspan="2">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product: ${products}">
+                <th scope="row" th:text="${product.getId()}"></th>
+                <td th:text="${product.getName()}"></td>
+                <td th:text="${product.getPrice()}"></td>
+                <td th:text="${product.getManufacturer()!=null}? ${product.getManufacturer().getName()} : 'No Manufacturer'"></td>
+                <td th:text="${product.getCategory()!=null} ? ${product.getCategory().getName()} : 'No Category'"></td>
+                <!--                <th:block sec:authorize="hasRole('ROLE_ADMIN')">-->
+                <td><form th:method="POST" th:action="@{'/products/edit/{id}'(id=${product.getId()})}">
+                    <input type="submit"  class="btn btn-primary" value="Edit">
+                </form></td>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td><form th:method="delete" th:action="@{'/products/delete/{id}'(id=${product.getId()})}">
+                        <input type="submit" class="btn btn-danger"  value="Delete">
+                    </form></td>
+                </th:block>
+                <!--                </th:block>-->
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${hasError!=null}">
+            <div th:text="${error}" class="alert alert-danger"></div>
+        </div>
+        <a href="/products/addProduct" class="btn btn-secondary">Add new Product</a>
+        <a href="/products/manufactures" class="btn btn-primary">See active Manufactures</a>
+    </div>
+</div>

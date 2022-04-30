@@ -1,0 +1,57 @@
+
+<div class="container m-3"  style="margin-bottom: 50px">
+    <form class="form-inline justify-content-center"  th:method="GET" th:action="@{'/services'}">
+        <div class="form-group mb-2">
+            <label class="form-control">Type</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select name="type" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="c : ${types}" th:text="${c.name()}" th:value="${c.name()}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter Services</button>
+    </form>
+    <div class="border-top m-3"></div>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Price</th>
+                <th scope="col">Duration</th>
+                <th:block th:if="${#request.getRemoteUser()!=null}">
+                    <th scope="col" colspan="2">Actions</th>
+                </th:block>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="service: ${services}">
+                <td th:text="${service.getType().name()}"></td>
+                <td th:text="${service.getPrice()}"></td>
+                <td th:text="${service.getDuration()}"></td>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td>
+                        <form th:action="@{'/services/delete/{id}' (id=${service.getId()})}" th:method="delete">
+                            <input type="submit"  class="btn btn-danger" value="Remove">
+                        </form>
+                    </td>
+                </th:block>
+                <td th:if="${#request.getRemoteUser()!=null}">
+                    <form th:action="@{'/services/edit/{id}'(id=${service.getId()})}" th:method="GET">
+                        <input type="submit" class="btn btn-dark" value="Edit">
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${hasError!=null}">
+            <div th:text="${error}" class="alert alert-danger"></div>
+        </div>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/services/addServices" class="btn btn-light">Add New Service</a>
+        </th:block>
+    </div>
+</div>

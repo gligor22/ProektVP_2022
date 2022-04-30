@@ -1,0 +1,70 @@
+
+<div class="container m-3"  style="margin-bottom: 50px">
+    <form class="form-inline justify-content-center"  th:method="GET" th:action="@{'/employees'}">
+        <div class="form-group mb-2">
+            <label class="form-control">Years Of Service</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input name="yearsOfService" type="number" class="form-control">
+        </div>
+        <div class="form-group mb-2">
+            <label class="form-control">Skills</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select id="f2"  name="skillId" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="skill : ${skills}" th:text="${skill.getName()}" th:value="${skill.getId()}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter Employees</button>
+    </form>
+    <div class="border-top m-3"></div>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Employee Email</th>
+                <th scope="col">Employee Type</th>
+                <th scope="col">Employment Date</th>
+                <th scope="col">Employee Salary</th>
+                <th scope="col">Employee Skills</th>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <th scope="col" colspan="2">Actions</th>
+                </th:block>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e: ${employees}">
+                <th scope="row" th:text="${e.getId()}"></th>
+                <td th:text="${e.getName()}"></td>
+                <td th:text="${e.getEmail()}"></td>
+                <td th:text="${e.getType()}"></td>
+                <td th:text="${e.getEmploymentDate()}"></td>
+                <td th:text="${e.getSalary()}"></td>
+                <td th:each="skill : ${e.getSkills()}">
+                    <span th:text="${skill.getName()}"></span>
+                <td>
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                        <form th:action="@{'/employees/delete/{id}' (id=${e.getId()})}" th:method="delete">
+                            <input type="submit"  class="btn btn-danger" value="Remove">
+                        </form>
+                    </th:block>
+                </td>
+                <td>
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                        <form th:action="@{'/employees/edit/{id}'(id=${e.getId()})}" th:method="GET">
+                            <input type="submit"  class="btn btn-primary" value="Edit">
+                        </form>
+                    </th:block>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/employees/addEmployee" class="btn btn-info">Add New Employee</a>
+        </th:block>
+    </div>
+</div>

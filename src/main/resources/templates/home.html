@@ -1,0 +1,89 @@
+<div class="modal-body row" th:if="${#request.getRemoteUser()!=null}" style="margin-bottom: 50px;margin-top: 20px">
+    <div class="col-md-8">
+        <!-- Your first column here -->
+        <h4 class="text-uppercase text-center mb-5">Client Incomes</h4>
+        <div >
+
+            <div th:if="${patient!=null}">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Surname</th>
+                        <th scope="col">Services</th>
+                        <th scope="col">Products</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Payment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${income.getDone()==0}" th:each="income:${incomes}">
+                        <td scope="row" th:text="${patient.getId()}"></td>
+                        <td th:text="${patient.getName()}"></td>
+                        <td th:text="${patient.getSurname()}"></td>
+                        <td th:each="service: ${income.getServices()}">
+                            <span th:text="${service.getPrice()} + '$    ' + ${service.getType()}"></span>
+                        </td>
+                        <td th:each="product: ${income.getProducts()}">
+                            <span th:text="${product.getPrice()} + '$    ' + ${product.getName()}"></span>
+                        </td>
+                        <td th:text="${income.payPrice()}"></td>
+                        <td>
+                            <form th:method="POST" th:action="@{'/home/pay/{id}' (id=${income.getId()})}">
+                                <input type="hidden" name="embr" th:value="${patient.getEmbr()}">
+                                <input type="Submit"  class="btn btn-success"  value="PAY">
+                            </form>
+                        </td>
+                    </tr>
+                    <tr  th:if="${income.getDone()==1}" th:each="income:${incomes}" style="background: lightgreen">
+                        <td scope="row" th:text="${patient.getId()}"></td>
+                        <td th:text="${patient.getName()}"></td>
+                        <td th:text="${patient.getSurname()}"></td>
+                        <td th:each="service: ${income.getServices()}">
+                            <span th:text="${service.getPrice()} + '$    ' + ${service.getType()}"></span>
+                        </td>
+                        <td th:each="product: ${income.getProducts()}">
+                            <span th:text="${product.getPrice()} + '$    ' + ${product.getName()}"></span>
+                        </td>
+                        <td th:text="${income.payPrice()}"></td>
+                        <td>Purchased</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <form class="form-inline"  th:method="GET" th:action="@{'/home'}">
+            <div class="form-group mb-2">
+                <label class="form-control">Patient EMBG</label>
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label  class="sr-only">Patient</label>
+                <input  placeholder="Enter Patient EMBG" type="text"  class="form-control"  name="embr">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Filter By Patient EMBG </button>
+        </form>
+
+    </div>
+    <div class="col-md-4">
+        <!-- Your second column here -->
+        <div class="container-fluid">
+            <h4 class="text-uppercase text-center mb-5">Today`s Appointments</h4>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Patient Name</th>
+                    <th scope="col">#</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr  th:each="a:${appointments}">
+                    <td th:text="${a.getPatient().getName()}"></td>
+                    <td th:text="${a.getTermin()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

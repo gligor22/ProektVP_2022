@@ -1,0 +1,69 @@
+
+
+<div class="container m-3"  style="margin-bottom: 50px">
+    <form class="form-inline justify-content-center"  th:method="GET" th:action="@{'/incomes'}">
+        <div class="form-group mb-2">
+            <label class="form-control">Service</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select name="serviceID" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="c : ${services}" th:text="${c.getType().name()}" th:value="${c.getId()}"></option>
+            </select>
+        </div>
+        <div class="form-group mb-2">
+            <label class="form-control">Product</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select id="f2"  name="productID" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="c : ${products}" th:text="${c.getName()}" th:value="${c.getId()}"></option>
+            </select>
+        </div>
+        <div class="form-group mb-2">
+            <label class="form-control">Patient</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select name="patientID" class="form-control">
+                <option value="">All</option>
+                <!-- For each skill you should have one <option> like below  -->
+                <option th:each="c : ${patients}" th:text="${c.getName()}" th:value="${c.getId()}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter Incomes</button>
+    </form>
+    <div class="border-top m-3"></div>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <!--                <th scope="col">#</th>-->
+                <th scope="col">Patient Name</th>
+                <th scope="col">Patient EMBG</th>
+                <!--                <th scope="col" colspan="2">Actions</th>-->
+                <th scope="col">Services</th>
+                <th scope="col">Products</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="income: ${incomes}">
+                <td th:text="${income.getPatient().getName()}"></td>
+                <td th:text="${income.getPatient().getEmbr()}"></td>
+                <td th:each="service : ${income.getServices()}">
+                    <!-- For each of the employee.skills show the following element-->
+                    <span class="item-rel" th:text="${service.getType()}"></span>
+                </td>
+                <td th:each="product : ${income.getProducts()}">
+                    <!-- For each of the employee.skills show the following element-->
+                    <span class="item-rel" th:text="${product.getName()}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/incomes/addIncome" class="btn btn-info">Add New Income</a>
+        </th:block>
+    </div>
+</div>

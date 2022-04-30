@@ -1,0 +1,47 @@
+
+
+<div class="container m-3"  style="margin-bottom: 50px">
+    <form class="form-inline justify-content-center"  th:method="GET" th:action="@{'/bills'}">
+        <div class="form-group mb-2">
+            <label class="form-control">Date From</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="date" class="form-control" id="from" name="from"/>
+        </div>
+        <div class="form-group mb-2">
+            <label class="form-control">Date To</label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="date" class="form-control" id="to" name="to"/>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter Bills</button>
+    </form>
+    <div class="border-top m-3"></div>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Electricity</th>
+                <th scope="col">Water</th>
+                <th scope="col">Operator</th>
+                <th scope="col">Heating</th>
+                <th scope="col">DDV</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bill: ${bills}">
+                <th scope="row" th:text="${bill.getId()}"></th>
+                <td th:text="${bill.getDate()}"></td>
+                <td th:text="${bill.getElectricity()}"></td>
+                <td th:text="${bill.getWater()}"></td>
+                <td th:text="${bill.getOperator()}"></td>
+                <td th:text="${bill.getHeating()}"></td>
+                <td th:text="${bill.getDDV()}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="/bills/addBill" class="btn btn-warning">Add new Monthly Bill</a>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="container m-3"  style="margin-bottom: 50px">
+    <div class="border-top m-3"></div>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col" colspan="2">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m: ${manufactures}">
+                <td scope="row" th:text="${m.getId()}"></td>
+                <td th:text="${m.getName()}"></td>
+                <td th:text="${m.getAddress()}"></td>
+                <td><form th:method="POST" th:action="@{'/products/manufactures/edit/{id}'(id=${m.getId()})}">
+                    <input type="submit" class="btn btn-dark"  value="Edit">
+                </form></td>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td><form th:method="delete" th:action="@{'/products/manufactures/delete/{id}'(id=${m.getId()})}">
+                        <input type="submit"  class="btn btn-danger"  value="Delete">
+                    </form></td>
+                </th:block>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${hasError!=null}">
+            <div th:text="${error}" class="alert alert-danger"></div>
+        </div>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/products/manufactures/addManufacturer" class="btn btn-light">Add new Manufacturer</a>
+        </th:block>
+    </div>
+</div>
+
